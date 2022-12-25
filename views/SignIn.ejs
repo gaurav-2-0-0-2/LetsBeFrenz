@@ -15,18 +15,18 @@
     <body class="text-center" style="margin:5% 35% 0 35%;">
 
         <main class="form-signin w-100 m-auto">
-            <form>
+            <form action="/SignIn" method="post">
                 <img src="./images/haikyyu main logo.png" alt="main_logo" height="150" width="150"
                     style="padding-bottom: 15px;border-radius: 100px;">
 
                 <h1 class="h3 mb-3 fw-normal">Sign-In</h1>
 
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="username">
                     <label for="floatingInput">Email address</label>
                 </div>
                 <div class="form-floating" style="padding-top: 3px;">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
                     <label for="floatingPassword">Password</label>
                 </div>
 
@@ -38,9 +38,9 @@
                 </div>
 
                 <div class="buttons" style="display: flex; justify-content: space-between;">
-                    
-                        <button class="w-50 h-40 btn btn-lg btn-dark" type="submit">Sign Up</button>
-                    
+
+                    <a href="/SignUp" class="w-50 h-40 btn btn-lg btn-dark">Sign Up</a>
+
 
                     <button class="w-50 btn btn-lg" type="submit"
                         style="margin-left: 15px;background-color: rgb(236, 76, 18);color:aliceblue;">Sign In</button>
