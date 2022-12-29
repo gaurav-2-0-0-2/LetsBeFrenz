@@ -22,7 +22,7 @@ mongoose.connect("mongodb://localhost:27017/friendDB", { useNewUrlParser: true }
 // Create Schema
 const friendSchema = new mongoose.Schema({
     email: String,
-    password: Array,
+    password: String,
 });
 
 // Create Model through Schema
@@ -54,11 +54,11 @@ app.get('/welcome', (req, res) => {
 app.post('/SignUp', (req, res) => {
     // console.log(req.body.username);
     // console.log(req.body.password); 
-    const newFriend = new Friend({
-        email: req.body.username,
-        password: req.body.password,
-        confirmPassword: req.body.password
-    });
+   const  newFriend = new Friend({
+    email: req.body.username,
+    password: req.body.password,
+    confirmPassword: req.body.password
+   });
 
     newFriend.save((err) => {
         if (err) {
@@ -68,46 +68,22 @@ app.post('/SignUp', (req, res) => {
         }
     })
 
-});
 
-
-
-app.post('/SignIn', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    Friend.findOne({ email: username }, function (err, foundFriend) {
-        if (err) {
-            console.log(err);
-        } else {
-            if (foundFriend) {
-                if (foundFriend.password === password) {
-                    res.render("welcome");
-                 }else{
-                    console.log("You've entered wrong password.")
-                 }
-            }
-        }
+    
+})
+app.post('/SignIn', (req,res)=>{
+    // console.log(req.body.username);
+    // console.log(req.body.password);
+    Friend.findOne({
+        email: req.body.username,
     });
-
-
-});
-
-// app.post("/SignIn", (req,res)=>{
-//    const username = req.body.username;
-//    const password = req.body.password;
-
-//    Friend.findOne({email:username}, (err, foundFriend)=>{
-//     if(err){
-//         console.log(err);
-//     }else{
-//         if(foundFriend){
-//             if(foundFriend.password === password){
-//                 res.render("welcome");
-//             }
-//         }
-//     }
-//    });
-// });
+    if (req.body.password==Friend.password) {
+        res.render("welcome");
+    } else {
+        console.log("Oops! Wrong password");
+    }
+    
+})
 
 
 app.listen(3000, () => {
