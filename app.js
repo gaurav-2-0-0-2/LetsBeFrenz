@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 
@@ -56,23 +57,30 @@ app.get("/noFriend", (req, res) => {
 
 app.post('/SignUp', (req, res) => {
     const { username, password, confirmPassword } = req.body
-    const newFriend = new Friend({
-        email: username,
-        password: password,
-        confirmPassword: confirmPassword
-    });
 
-    if (password !== confirmPassword) {
-        console.log("Password did not match!");
-    } else {
-        newFriend.save((err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.render("welcome");
-            }
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        // Store hash in your password DB.
+        const newFriend = new Friend({
+            email: username,
+            password: hash,
+            confirmPassword: hash
         });
-    }
+    
+        
+    
+        if (password !== confirmPassword) {
+            res.render("passwordNotMatch");
+        } else {
+            newFriend.save((err) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("welcome");
+                }
+            });
+        }
+    });
+    
 });
 
 
@@ -87,11 +95,13 @@ app.post('/SignIn', (req, res) => {
             console.log(err);
         } else {
             if (foundFriend) {
-                if (foundFriend.password === password) {
-                    res.render("welcome");
-                } else {
-                    res.render("signInFailed");
-                }
+                bcrypt.compare(password, foundFriend.password, function(err, result) {
+                    if (result == true) {
+                        res.render("welcome");
+                    }else{
+                        res.render("signInFailed");
+                    }
+                });
             } else {
                 res.render("noFriend");
             }
