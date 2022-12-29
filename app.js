@@ -44,9 +44,9 @@ app.get('/welcome', (req, res) => {
     res.render('welcome');
 })
 
-// app.get("/signInFail", (req,res)=>{
-//     res.render("signInFail");
-// });
+app.get("/signInFail", (req,res)=>{
+    res.render("signInFail");
+});
 
 
 
@@ -72,16 +72,25 @@ app.post('/SignUp', (req, res) => {
     
 })
 app.post('/SignIn', (req,res)=>{
-    // console.log(req.body.username);
-    // console.log(req.body.password);
-    Friend.findOne({
-        email: req.body.username,
+    const username = req.body.username;
+    const password = req.body.password;
+
+    Friend.findOne({email: username}, (err,foundFriend)=>{
+        if (err) {
+            console.log(err);
+        }else{
+            if(foundFriend){
+                if (foundFriend.password === password) {
+                    res.render("welcome");
+                } else {
+                    res.render("signInFailed");
+                }
+            }else{
+                res.render("noFriend");
+            }
+        }
     });
-    if (req.body.password==Friend.password) {
-        res.render("welcome");
-    } else {
-        console.log("Oops! Wrong password");
-    }
+    
     
 })
 
