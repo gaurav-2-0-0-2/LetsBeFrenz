@@ -23,6 +23,7 @@ mongoose.connect("mongodb://localhost:27017/friendDB", { useNewUrlParser: true }
 const friendSchema = new mongoose.Schema({
     email: String,
     password: String,
+    confirmPassword: String
 });
 
 // Create Model through Schema
@@ -44,54 +45,60 @@ app.get('/welcome', (req, res) => {
     res.render('welcome');
 })
 
-app.get("/signInFail", (req,res)=>{
+app.get("/signInFail", (req, res) => {
     res.render("signInFail");
+});
+
+app.get("/noFriend", (req, res) => {
+    res.render("noFriend");
+})
+
+
+app.post('/SignUp', (req, res) => {
+    const { username, password, confirmPassword } = req.body
+    const newFriend = new Friend({
+        email: username,
+        password: password,
+        confirmPassword: confirmPassword
+    });
+
+    if (password !== confirmPassword) {
+        console.log("Password did not match!");
+    } else {
+        newFriend.save((err) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("welcome");
+            }
+        });
+    }
 });
 
 
 
 
-app.post('/SignUp', (req, res) => {
-    // console.log(req.body.username);
-    // console.log(req.body.password); 
-   const  newFriend = new Friend({
-    email: req.body.username,
-    password: req.body.password,
-    confirmPassword: req.body.password
-   });
-
-    newFriend.save((err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("welcome");
-        }
-    })
-
-
-    
-})
-app.post('/SignIn', (req,res)=>{
+app.post('/SignIn', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    Friend.findOne({email: username}, (err,foundFriend)=>{
+    Friend.findOne({ email: username }, (err, foundFriend) => {
         if (err) {
             console.log(err);
-        }else{
-            if(foundFriend){
+        } else {
+            if (foundFriend) {
                 if (foundFriend.password === password) {
                     res.render("welcome");
                 } else {
                     res.render("signInFailed");
                 }
-            }else{
+            } else {
                 res.render("noFriend");
             }
         }
     });
-    
-    
+
+
 })
 
 
