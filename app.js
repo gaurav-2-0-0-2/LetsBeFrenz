@@ -32,11 +32,11 @@ const Friend = new mongoose.model("Friend", friendSchema);
 
 app.get('/', (req, res) => {
     res.render("home");
-})
+});
 
 app.get('/SignUp', (req, res) => {
     res.render('SignUp');
-})
+});
 
 app.get('/SignIn', (req, res) => {
     res.render('SignIn');
@@ -44,7 +44,7 @@ app.get('/SignIn', (req, res) => {
 
 app.get('/welcome', (req, res) => {
     res.render('welcome');
-})
+});
 
 app.get("/signInFail", (req, res) => {
     res.render("signInFail");
@@ -52,7 +52,7 @@ app.get("/signInFail", (req, res) => {
 
 app.get("/noFriend", (req, res) => {
     res.render("noFriend");
-})
+});
 
 
 app.post('/SignUp', (req, res) => {
@@ -109,12 +109,12 @@ app.post('/SignIn', (req, res) => {
     });
 
 
-})
+});
 
 
 app.listen(3000, () => {
     console.log('server listening at port 3000');
-})
+});
 
 
 
