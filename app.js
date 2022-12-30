@@ -16,7 +16,7 @@ app.set('view engine', "ejs");
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect("mongodb://localhost:27017/friendDB", { useNewUrlParser: true });
+mongoose.connect("mongodb://127.0.0.1:27017/friendDB", { useNewUrlParser: true });
 
 
 
@@ -55,33 +55,28 @@ app.get("/noFriend", (req, res) => {
 });
 
 
-app.post('/SignUp', (req, res) => {
-    const { username, password, confirmPassword } = req.body
-
-    bcrypt.hash(password, saltRounds, function (err, hash) {
-        // Store hash in your password DB.
-        const newFriend = new Friend({
-            email: username,
-            password: hash,
-            confirmPassword: hash
-        });
-
-
-
-        if (password !== confirmPassword) {
-            res.render("passwordNotMatch");
-        } else {
-            newFriend.save((err) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.render("welcome");
-                }
-            });
-        }
-    });
-
-});
+app.post('/SignUp', async (req, res) => {
+    try {
+      const { username, password, confirmPassword } = req.body;
+  
+      const hash = await bcrypt.hash(password, saltRounds);
+      const newFriend = new Friend({
+        email: username,
+        password: hash,
+        confirmPassword: hash,
+      });
+  
+      if (password !== confirmPassword) {
+        res.render("passwordNotMatch");
+      } else {
+        await newFriend.save();
+        res.render("welcome");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  
 
 // Solving the error coming while deploying 
 
