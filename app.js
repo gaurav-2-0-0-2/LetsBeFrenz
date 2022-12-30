@@ -58,16 +58,16 @@ app.get("/noFriend", (req, res) => {
 app.post('/SignUp', (req, res) => {
     const { username, password, confirmPassword } = req.body
 
-    bcrypt.hash(password, saltRounds, function(err, hash) {
+    bcrypt.hash(password, saltRounds, function (err, hash) {
         // Store hash in your password DB.
         const newFriend = new Friend({
             email: username,
             password: hash,
             confirmPassword: hash
         });
-    
-        
-    
+
+
+
         if (password !== confirmPassword) {
             res.render("passwordNotMatch");
         } else {
@@ -80,36 +80,40 @@ app.post('/SignUp', (req, res) => {
             });
         }
     });
-    
+
 });
 
+// Solving the error coming while deploying 
+
+// The error message you provided suggests that you are using an async function, 
+//but you are not properly handling any potential rejections.
+
+// To fix this error, 
+//you will need to add a catch block to the Promise chain to handle any potential rejections.
 
 
 
-app.post('/SignIn', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+app.post('/SignIn', async (req, res) => {
+    try {
+        const username = req.body.username;
+        const password = req.body.password;
 
-    Friend.findOne({ email: username }, (err, foundFriend) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (foundFriend) {
-                bcrypt.compare(password, foundFriend.password, function(err, result) {
-                    if (result == true) {
-                        res.render("welcome");
-                    }else{
-                        res.render("signInFailed");
-                    }
-                });
+        const foundFriend = await Friend.findOne({ email: username });
+        if (foundFriend) {
+            const result = await bcrypt.compare(password, foundFriend.password);
+            if (result) {
+                res.render("welcome");
             } else {
-                res.render("noFriend");
+                res.render("signInFailed");
             }
+        } else {
+            res.render("noFriend");
         }
-    });
-
-
+    } catch (error) {
+        console.error(error);
+    }
 });
+
 
 
 app.listen(3000, () => {
