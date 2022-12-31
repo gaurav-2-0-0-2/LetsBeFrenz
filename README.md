@@ -15,4 +15,5 @@ using ssh
 # Clone this repository 
 ```git clone git@github.com:gaurav-2-0-0-2/Sign-Up-page-with-authentication.git```
 
+## After cloning this repository run ```npm install``` to install all the packages 
 
