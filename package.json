@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm start",
+    "build": "npm run build",
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
